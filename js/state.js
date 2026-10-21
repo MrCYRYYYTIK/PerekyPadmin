@@ -1,4 +1,4 @@
-var SAVE_VERSION = 5;
+var SAVE_VERSION = 6;
 var SAVE_KEY_LOCAL = 'perekup';
 var SAVE_KEY_VK = 'perekup_save_v2';
 
@@ -19,6 +19,7 @@ var dolg = 0;
 var activeSkin = '👤';
 var tab = 'market';
 var tema = 'dark';
+var cvet = 'blue'; // 'blue' | 'green' | 'purple' | 'red' | 'orange' | 'yellow' | 'pink'
 var moeDom = 'street';
 var vtoroyDom = null;
 var domUp = 0;
@@ -38,7 +39,6 @@ var TEKUSHCHAYA_VERSIYA = '1.2';
 
 var kupilVsego = 0;
 var prodalVsego = 0;
-var jackpotVyl = false;
 var apnutoDo5 = 0;
 var vystavlenoLotov = 0;
 var sEdeno = 0;
@@ -76,8 +76,13 @@ function formatTime(chas, min) {
 }
 
 function primenitTemu() {
+  document.body.classList.remove('cvet-blue', 'cvet-green', 'cvet-purple', 'cvet-red', 'cvet-orange', 'cvet-yellow', 'cvet-pink');
   if (tema == 'light') document.body.classList.add('light');
   else document.body.classList.remove('light');
+  
+  if (cvet && cvet !== 'blue') {
+    document.body.classList.add('cvet-' + cvet);
+  }
 }
 
 function sobratSaveObekt() {
@@ -90,7 +95,7 @@ function sobratSaveObekt() {
     poslSonDen: poslSonDen, poslEdaMin: poslEdaMin, poslEnergMin: poslEnergMin,
     activeSkin: activeSkin, dostizheniya: dostizheniya,
     kupilVsego: kupilVsego, prodalVsego: prodalVsego,
-    jackpotVyl: jackpotVyl, tema: tema, moeDom: moeDom,
+    tema: tema, cvet: cvet, moeDom: moeDom,
     vtoroyDom: vtoroyDom, pokazyvatModalki: pokazyvatModalki,
     domUp: domUp, vtoroyDomId: vtoroyDomId, vtoroyDomUp: vtoroyDomUp,
     poslDohodDen: poslDohodDen,
@@ -155,8 +160,8 @@ function primenitSave(d) {
   }
   if (typeof d.kupilVsego === 'number' && d.kupilVsego >= 0) kupilVsego = d.kupilVsego;
   if (typeof d.prodalVsego === 'number' && d.prodalVsego >= 0) prodalVsego = d.prodalVsego;
-  if (typeof d.jackpotVyl === 'boolean') jackpotVyl = d.jackpotVyl;
   if (d.tema === 'dark' || d.tema === 'light') tema = d.tema;
+  if (typeof d.cvet === 'string') cvet = d.cvet;
   if (typeof d.moeDom === 'string' && naytiDom(d.moeDom)) moeDom = d.moeDom;
   if (d.vtoroyDom === 'mesto' || d.vtoroyDom === null) vtoroyDom = d.vtoroyDom;
   if (typeof d.pokazyvatModalki === 'boolean') pokazyvatModalki = d.pokazyvatModalki;
@@ -222,7 +227,7 @@ function sbrosProgressa() {
   poslBonus = 0; seriyaDney = 0;
   poslSonDen = 0; poslEdaMin = -9999; poslEnergMin = -9999;
   kupilVsego = 0; prodalVsego = 0;
-  jackpotVyl = false; apnutoDo5 = 0; vystavlenoLotov = 0;
+  apnutoDo5 = 0; vystavlenoLotov = 0;
   sEdeno = 0; sEdenoRestoran = 0; pospalRaz = 0;
   skinKingKupil = false; skinDragonKupil = false;
   bralKredit = false; platilDolg = false;
@@ -342,4 +347,4 @@ function dohodDomaSUp(dom, up) {
 
 function sonDomaSUp(dom, up) {
   return Math.floor(dom.son * (1 + up * 0.5));
-}
+    }
