@@ -1,4 +1,4 @@
-var SAVE_VERSION = 4;
+var SAVE_VERSION = 5;
 var SAVE_KEY_LOCAL = 'perekup';
 var SAVE_KEY_VK = 'perekup_save_v2';
 
@@ -50,6 +50,10 @@ var bralKredit = false;
 var platilDolg = false;
 
 var rynokCateg = 'all';
+var casinoTab = 'keysy';
+var rulPoslRezultat = '';
+var upgradeVybranUid = null;
+var upgradeResult = '';
 
 function tekuscheeIgrovoeMs() {
   var vIgre = (Date.now() - vremyaZahoda) * MNOZHITEL_V_IGRE;
@@ -104,27 +108,20 @@ function sobratSaveObekt() {
 function sohranit() {
   if (sohranenieVProtsesse) return;
   sohranenieVProtsesse = true;
-
   igrovoySdvig = tekuscheeIgrovoeMs();
   vremyaZahoda = Date.now();
   posledneeSohr = Date.now();
-
   var data = sobratSaveObekt();
   var json = JSON.stringify(data);
-
   try { localStorage.setItem(SAVE_KEY_LOCAL, json); } catch(e) {}
-
   if (typeof vkBridge !== 'undefined' && vkBridge && vkBridge.send) {
-    try {
-      vkBridge.send('VKWebAppStorageSet', { key: SAVE_KEY_VK, value: json }).catch(function() {});
-    } catch(e) {}
+    try { vkBridge.send('VKWebAppStorageSet', { key: SAVE_KEY_VK, value: json }).catch(function() {}); } catch(e) {}
   }
   sohranenieVProtsesse = false;
 }
 
 function primenitSave(d) {
   if (!d || typeof d !== 'object') return;
-
   if (typeof d.dengi === 'number' && d.dengi >= 0 && isFinite(d.dengi)) dengi = d.dengi;
   if (typeof d.lvl === 'number' && d.lvl >= 1 && d.lvl <= 1000) lvl = d.lvl;
   if (typeof d.opyt === 'number' && d.opyt >= 0) opyt = d.opyt;
@@ -177,7 +174,6 @@ function primenitSave(d) {
   if (typeof d.skinDragonKupil === 'boolean') skinDragonKupil = d.skinDragonKupil;
   if (typeof d.bralKredit === 'boolean') bralKredit = d.bralKredit;
   if (typeof d.platilDolg === 'boolean') platilDolg = d.platilDolg;
-
   var oldSdvig = (typeof d.igrovoySdvig === 'number') ? d.igrovoySdvig : 0;
   var oldSohr = (typeof d.posledneeSohr === 'number') ? d.posledneeSohr : Date.now();
   var proshloOffline = Date.now() - oldSohr;
@@ -300,7 +296,6 @@ function proveritDostizheniya() {
     if (d.id == 'skin_dragon' && skinDragonKupil) vypolnil = true;
     if (d.id == 'bank_first' && bralKredit) vypolnil = true;
     if (d.id == 'bank_clean' && platilDolg) vypolnil = true;
-
     if (vypolnil) {
       d.done = true;
       dengi += d.reward;
