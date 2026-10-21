@@ -127,7 +127,20 @@ var tovari = [
   { id: 'drone', name: '🚁 Дрон', cena: 250000, lvl: 8, ap: 60000, category: 'tech' },
   { id: 'rolex', name: '⌚ Ролекс', cena: 800000, lvl: 10, ap: 200000, category: 'clothes' },
   { id: 'boat', name: '🛥️ Катер', cena: 15000000, lvl: 16, ap: 3500000, category: 'auto' },
-  { id: 'yacht', name: '⛵ Яхта', cena: 60000000, lvl: 22, ap: 15000000, category: 'auto' }
+  { id: 'yacht', name: '⛵ Яхта', cena: 60000000, lvl: 22, ap: 15000000, category: 'auto' },
+  { id: 'drums', name: '🥁 Барабаны', cena: 30000, lvl: 3, ap: 8000, category: 'music' },
+  { id: 'action_cam', name: '📹 Экшн-камера', cena: 45000, lvl: 4, ap: 11000, category: 'tech' },
+  { id: 'sony', name: '🎧 Наушники Sony', cena: 80000, lvl: 5, ap: 20000, category: 'tech' },
+  { id: '3dprint', name: '🖨️ 3D-принтер', cena: 300000, lvl: 9, ap: 75000, category: 'tech' },
+  { id: 'robot', name: '🤖 Робот-пылесос', cena: 50000, lvl: 4, ap: 12000, category: 'tech' },
+  { id: 'cap', name: '🧢 Кепка Supreme', cena: 25000, lvl: 3, ap: 6000, category: 'clothes' },
+  { id: 'suit', name: '👔 Костюм', cena: 150000, lvl: 8, ap: 35000, category: 'clothes' },
+  { id: 'louis', name: '👜 Сумка Louis Vuitton', cena: 300000, lvl: 10, ap: 75000, category: 'clothes' },
+  { id: 'scooter', name: '🛴 Электросамокат', cena: 50000, lvl: 6, ap: 12000, category: 'auto' },
+  { id: 'tractor', name: '🚜 Трактор', cena: 3000000, lvl: 14, ap: 750000, category: 'auto' },
+  { id: 'camper', name: '🚐 Кемпер', cena: 8000000, lvl: 16, ap: 2000000, category: 'auto' },
+  { id: 'stroyka', name: '🏗️ Стройка', cena: 100000, lvl: 7, ap: 25000, category: 'realty' },
+  { id: 'shop', name: '🏬 Магазин', cena: 3000000, lvl: 14, ap: 750000, category: 'realty' }
 ];
 
 var keysy = [
