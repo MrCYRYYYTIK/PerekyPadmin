@@ -45,7 +45,6 @@ function kupit(itemId) {
   var cena = randomCena(item.cena);
   if (dengi < cena) { toast('💸 Мало денег', 'err'); return; }
   if (energ < 1) { toast('⚡ Нет энергии', 'err'); return; }
-
   dengi = dengi - cena;
   energ = energ - 1;
   inv.push({ uid: Date.now() + Math.random(), itemId: item.id, kupCena: cena, ap: 0 });
@@ -67,7 +66,6 @@ function apnut(uid) {
   var en = energiyaZaAp(item, moy.ap);
   if (dengi < stoimost) { toast('💸 Нужно ' + formatChislo(stoimost) + '₽', 'err'); return; }
   if (energ < en) { toast('⚡ Нужно ' + en + ' энергии', 'err'); return; }
-
   dengi = dengi - stoimost;
   energ = energ - en;
   moy.ap = moy.ap + 1;
@@ -88,9 +86,7 @@ function otkritModalLota(uid) {
   var item = naytiTovar(moy.itemId);
   var minC = minCenaTovara(item, moy.ap);
   var maxC = maxCenaTovara(item, moy.ap);
-
   lotTekushchiyUid = uid;
-
   var modal = document.getElementById('modalLota');
   if (!modal) return;
   document.getElementById('lotaItemName').textContent = item.name + (moy.ap > 0 ? ' +' + moy.ap : '');
@@ -112,15 +108,12 @@ function podtverdLota() {
   var item = naytiTovar(moy.itemId);
   var minC = minCenaTovara(item, moy.ap);
   var maxC = maxCenaTovara(item, moy.ap);
-
   var moyaCena = parseInt(document.getElementById('lotaCena').value);
   var osh = document.getElementById('lotaOshibka');
   osh.style.display = 'none';
-
   if (isNaN(moyaCena)) { osh.textContent = '❌ Введи число!'; osh.style.display = 'block'; return; }
   if (moyaCena < minC) { osh.textContent = '📉 Минимум ' + formatChislo(minC) + '₽'; osh.style.display = 'block'; return; }
   if (moyaCena > maxC) { osh.textContent = '📈 Максимум ' + formatChislo(maxC) + '₽'; osh.style.display = 'block'; return; }
-
   inv.splice(idx, 1);
   var lot = {
     uid: Date.now() + Math.random(),
@@ -160,7 +153,6 @@ function prodatLot(uid) {
   if (idx == -1) return;
   var l = loty[idx];
   if (energ < 1) { toast('⚡ Нет энергии', 'err'); return; }
-
   if (l.vremyaAktivnosti && Date.now() > l.vremyaAktivnosti) {
     var item2 = naytiTovar(l.itemId);
     rasschitatShansICena(l, item2);
@@ -169,11 +161,9 @@ function prodatLot(uid) {
     render();
     return;
   }
-
   var shans = l.shansProdagy || 50;
   var prodano = Math.random() * 100 < shans;
   energ = energ - 1;
-
   if (prodano) {
     var itog = l.moyaCena - komissiyaProdaZhi(l.moyaCena);
     dengi = dengi + itog;
@@ -197,13 +187,11 @@ function prodatMgnovenno(uid) {
   if (idx == -1) return;
   var moy = inv[idx];
   if (energ < 1) { toast('⚡ Нет энергии', 'err'); return; }
-
   var item = naytiTovar(moy.itemId);
   var maxC = maxCenaTovara(item, moy.ap);
   var cenaProd = Math.floor(maxC * 0.75);
   var itog = cenaProd - komissiyaProdaZhi(cenaProd);
   var prof = itog - moy.kupCena;
-
   dengi = dengi + itog;
   energ = energ - 1;
   inv.splice(idx, 1);
@@ -219,28 +207,22 @@ function sest() {
   var v = vremyaIgry();
   if (poslSonDen === v.den) { toast('😴 Ты уже спал сегодня', 'err'); return; }
   if (v.chas >= SON_DO_CHASA && v.chas < SON_S) { toast('😴 Спать можно только ночью (22:00–09:00)', 'err'); return; }
-
   var chasSpal;
   if (v.chas >= SON_S) chasSpal = (24 - v.chas) + SON_DO_CHASA;
   else chasSpal = SON_DO_CHASA - v.chas;
   if (chasSpal > SON_CHASOV_NORMA) chasSpal = SON_CHASOV_NORMA;
-
   var dom = naytiDom(moeDom);
   var sonMax = sonDomaSUp(dom, domUp);
   var dobavka = Math.floor(sonMax * (chasSpal / SON_CHASOV_NORMA));
   if (dobavka < 1) dobavka = 1;
-
   energ = energ + dobavka;
   if (energ > maxEnerg) energ = maxEnerg;
-
   var minSpal = chasSpal * 60;
   igrovoySdvig += minSpal * 60 * 1000;
   vremyaZahoda = Date.now();
-
   var novoeVremya = vremyaIgry();
   poslSonDen = novoeVremya.den;
   pospalRaz++;
-
   dobavitOpyt(EDINIC_OPYT_ZA_SON);
   toast('😴 Спал ' + chasSpal + ' ч. +' + dobavka + ' ⚡', 'ok');
   sohranit();
@@ -252,7 +234,6 @@ function kupitEdu(id) {
   var e = null;
   for (var i = 0; i < eda.length; i++) if (eda[i].id == id) e = eda[i];
   if (!e) return;
-
   var v = vremyaIgry();
   var tekMin = v.den * 1440 + v.chas * 60 + v.min;
   if (tekMin - poslEdaMin < EDA_KULDAUN_MIN) {
@@ -260,10 +241,8 @@ function kupitEdu(id) {
     toast('🍽️ Сытый! Через ' + ostalos + ' игровых мин.', 'err');
     return;
   }
-
   if (dengi < e.cena) { toast('💸 Мало денег', 'err'); return; }
   if (energ >= maxEnerg) { toast('⚡ Энергия полная', 'err'); return; }
-
   dengi = dengi - e.cena;
   energ = energ + e.energ;
   if (energ > maxEnerg) energ = maxEnerg;
@@ -280,14 +259,12 @@ function kupitDom(id) {
   if (!d) return;
   if (moeDom == id) { toast('🏠 Уже живёшь тут', 'err'); return; }
   if (dengi < d.cena) { toast('💸 Мало денег', 'err'); return; }
-
   if (moeDom != 'street') {
     var staryyDom = naytiDom(moeDom);
     var vozvrat = Math.floor(staryyDom.cena * 0.5);
     dengi += vozvrat;
     toast('💸 Старый дом продан за ' + formatChislo(vozvrat) + '₽', 'ok');
   }
-
   dengi -= d.cena;
   moeDom = id;
   domUp = 0;
@@ -354,16 +331,13 @@ function proveritDohod() {
   var v = vremyaIgry();
   if (v.chas < 12) return;
   if (poslDohodDen === v.den) return;
-
   var totalDohod = 0;
   var d1 = naytiDom(moeDom);
   totalDohod += dohodDomaSUp(d1, domUp);
-
   if (vtoroyDomId) {
     var d2 = naytiDom(vtoroyDomId);
     totalDohod += Math.floor(d2.cena * ARENDA_PROCENT) + dohodDomaSUp(d2, vtoroyDomUp);
   }
-
   if (totalDohod > 0) {
     dengi += totalDohod;
     poslDohodDen = v.den;
@@ -383,10 +357,8 @@ function propustitVremya(uid) {
   else if (rnd < 0.95) { minPropusk = 10; opisanie = '10 мин'; }
   else if (rnd < 0.99) { minPropusk = 60; opisanie = '1 час'; }
   else { minPropusk = 360; opisanie = '6 часов'; }
-
   igrovoySdvig += minPropusk * 60 * 1000;
   vremyaZahoda = Date.now();
-
   toast('⏩ Пропущено: ' + opisanie, 'gold');
   sohranit();
   render();
@@ -466,19 +438,16 @@ function otkritKeys(keysId) {
   for (var i = 0; i < keysy.length; i++) if (keysy[i].id == keysId) k = keysy[i];
   if (!k) return;
   if (dengi < k.cena) { toast('💸 Мало денег', 'err'); return; }
-
   dengi -= k.cena;
   keysTekushchiy = k;
   keysCenaOplachena = k.cena;
   keysMozhnoZabrat = false;
   sohranit();
   keysAnimating = true;
-
   document.getElementById('keysTitle').textContent = k.name;
   document.getElementById('keysOpisanie').textContent = k.desc;
   document.getElementById('keysResult').style.display = 'none';
   document.getElementById('keysBtns').style.display = 'flex';
-
   var total = 0;
   for (var i = 0; i < k.prizes.length; i++) total += k.prizes[i].weight;
   var rnd = Math.random() * total;
@@ -488,14 +457,12 @@ function otkritKeys(keysId) {
     sum += k.prizes[j].weight;
     if (rnd <= sum) { vyigral = k.prizes[j]; break; }
   }
-
   var lenta = [];
   var indexWin = 25;
   for (var n = 0; n < 31; n++) {
     if (n === indexWin) lenta.push(vyigral);
     else lenta.push(k.prizes[Math.floor(Math.random() * k.prizes.length)]);
   }
-
   var zone = document.getElementById('keysZone');
   var lentaEl = document.getElementById('keysLenta');
   lentaEl.innerHTML = '';
@@ -506,17 +473,14 @@ function otkritKeys(keysId) {
     if (m === indexWin) card.classList.add('win');
     lentaEl.appendChild(card);
   }
-
   lentaEl.style.transition = 'none';
   lentaEl.style.transform = 'translateX(0px)';
-
   setTimeout(function() {
     var cardWidth = 88;
     var centerOffset = zone.offsetWidth / 2 - 40;
     var targetX = -(indexWin * cardWidth) + centerOffset;
     lentaEl.style.transition = 'transform 3s cubic-bezier(0.1, 0.9, 0.3, 1)';
     lentaEl.style.transform = 'translateX(' + targetX + 'px)';
-
     setTimeout(function() {
       if (vyigral.type === 'money') dengi += vyigral.amount;
       else if (vyigral.type === 'item') {
@@ -531,7 +495,6 @@ function otkritKeys(keysId) {
       render();
     }, 3200);
   }, 50);
-
   otkritModal('modalKeys');
 }
 
@@ -555,6 +518,112 @@ function otmenitKeys() {
   keysCenaOplachena = 0;
   keysMozhnoZabrat = false;
   zakrModal('modalKeys');
+  render();
+}
+
+var rulAnimating = false;
+
+function krutitRul(cvet) {
+  if (rulAnimating) { toast('⏳ Крутится...', 'err'); return; }
+  var stavka = parseInt(document.getElementById('rulStavka').value);
+  if (isNaN(stavka) || stavka <= 0) { toast('❌ Введи ставку', 'err'); return; }
+  if (dengi < stavka) { toast('💸 Мало денег', 'err'); return; }
+  dengi -= stavka;
+  sohranit();
+  rulAnimating = true;
+  rulPoslRezultat = '';
+  var redNumbers = [1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36];
+  var pobednoe = Math.floor(Math.random() * 37);
+  var pobedCvet;
+  if (pobednoe === 0) pobedCvet = 'green';
+  else if (redNumbers.indexOf(pobednoe) !== -1) pobedCvet = 'red';
+  else pobedCvet = 'black';
+  var lenta = [];
+  var indexWin = 15;
+  for (var i = 0; i < 31; i++) {
+    if (i === indexWin) lenta.push({ num: pobednoe, cvet: pobedCvet });
+    else {
+      var r = Math.floor(Math.random() * 37);
+      var c;
+      if (r === 0) c = 'green';
+      else if (redNumbers.indexOf(r) !== -1) c = 'red';
+      else c = 'black';
+      lenta.push({ num: r, cvet: c });
+    }
+  }
+  var overlay = document.createElement('div');
+  overlay.id = 'rulOverlay';
+  overlay.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.9);z-index:200;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;';
+  overlay.innerHTML = '<h2 style="color:#66ccff;margin-bottom:20px;">🎰 Рулетка</h2>' +
+    '<div style="position:relative;width:100%;max-width:400px;height:120px;overflow:hidden;background:#111;border-radius:12px;border:2px solid #c966ff;">' +
+    '<div style="position:absolute;top:0;bottom:0;left:50%;width:3px;background:gold;transform:translateX(-50%);z-index:10;box-shadow:0 0 10px gold;"></div>' +
+    '<div id="rulLenta" style="position:absolute;top:10px;left:0;height:100px;display:flex;gap:6px;padding:0 10px;"></div>' +
+    '</div>';
+  document.body.appendChild(overlay);
+  var lentaEl2 = document.getElementById('rulLenta');
+  for (var m = 0; m < lenta.length; m++) {
+    var card = document.createElement('div');
+    var bgColor = lenta[m].cvet === 'red' ? '#a00' : (lenta[m].cvet === 'black' ? '#222' : '#0a0');
+    card.style.cssText = 'width:60px;height:100px;background:' + bgColor + ';border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;border:2px solid #555;color:white;font-weight:bold;font-size:18px;';
+    card.textContent = lenta[m].num;
+    lentaEl2.appendChild(card);
+  }
+  lentaEl2.style.transition = 'none';
+  lentaEl2.style.transform = 'translateX(0px)';
+  setTimeout(function() {
+    var cardWidth = 66;
+    var centerOffset = overlay.querySelector('div[style*="max-width:400px"]').offsetWidth / 2 - 30;
+    var targetX = -(indexWin * cardWidth) + centerOffset;
+    lentaEl2.style.transition = 'transform 3s cubic-bezier(0.1, 0.9, 0.3, 1)';
+    lentaEl2.style.transform = 'translateX(' + targetX + 'px)';
+    setTimeout(function() {
+      var vyigral = (cvet === pobedCvet);
+      var vyigrysh = 0;
+      if (vyigral) {
+        var mnozh = cvet === 'green' ? 14 : 2;
+        vyigrysh = stavka * mnozh;
+        dengi += vyigrysh;
+        rulPoslRezultat = '🎉 Выпало ' + pobednoe + ' (' + pobedCvet + ') — выиграл ' + formatChislo(vyigrysh) + '₽!';
+        toast('🎉 +' + formatChislo(vyigrysh) + '₽', 'gold');
+      } else {
+        rulPoslRezultat = '💀 Выпало ' + pobednoe + ' (' + pobedCvet + ') — потерял ' + formatChislo(stavka) + '₽';
+        toast('💀 −' + formatChislo(stavka) + '₽', 'err');
+      }
+      sohranit();
+      render();
+      overlay.remove();
+      rulAnimating = false;
+    }, 3200);
+  }, 50);
+}
+
+function vybratUpgrade(uid) {
+  upgradeVybranUid = uid ? parseFloat(uid) : null;
+  render();
+}
+
+function sdelatUpgrade(mnozhitel) {
+  if (!upgradeVybranUid) { toast('❌ Выбери предмет', 'err'); return; }
+  var idx = -1;
+  for (var i = 0; i < inv.length; i++) if (inv[i].uid == upgradeVybranUid) idx = i;
+  if (idx == -1) { toast('❌ Предмет не найден', 'err'); return; }
+  var moy = inv[idx];
+  var item = naytiTovar(moy.itemId);
+  var shansy = { 2: 50, 3: 30, 5: 15, 10: 5 };
+  var shans = shansy[mnozhitel];
+  if (!shans) return;
+  var uspekh = Math.random() * 100 < shans;
+  if (uspekh) {
+    moy.kupCena = moy.kupCena * mnozhitel;
+    upgradeResult = '🎉 УСПЕХ! ' + item.name + ' теперь стоит ' + formatChislo(moy.kupCena) + '₽';
+    toast('🎉 УСПЕХ!', 'gold');
+  } else {
+    inv.splice(idx, 1);
+    upgradeResult = '💀 ПРОВАЛ! ' + item.name + ' сгорел';
+    toast('💀 ПРОВАЛ!', 'err');
+  }
+  upgradeVybranUid = null;
+  sohranit();
   render();
 }
 
@@ -626,7 +695,6 @@ function admSetDengi() { var v = parseInt(document.getElementById('admDengi').va
 function admSetLvl() { var v = parseInt(document.getElementById('admLvl').value); if (isNaN(v) || v < 1 || v > 100) return toast('❌ 1-100', 'err'); lvl = v; maxEnerg = 20 + lvl * 2; opyt = trebOpyt(lvl); toast('⭐ Уровень: ' + v, 'gold'); sohranit(); render(); }
 function admAddOpyt() { var v = parseInt(document.getElementById('admLvl').value); if (isNaN(v) || v <= 0) return toast('❌ Введи число', 'err'); dobavitOpyt(v); toast('📈 +' + formatChislo(v) + ' опыта', 'gold'); sohranit(); render(); }
 function admMaxEnerg() { energ = maxEnerg; toast('⚡ ' + energ + '/' + maxEnerg, 'gold'); sohranit(); render(); }
-
 function admSetVremya() {
   var d = parseInt(document.getElementById('admDen').value);
   var c = parseInt(document.getElementById('admChas').value);
@@ -637,7 +705,6 @@ function admSetVremya() {
   toast('🕐 День ' + d + ', ' + (c < 10 ? '0' + c : c) + ':00', 'gold');
   sohranit(); render(); obnovitChasy();
 }
-
 function admVydatTovar() { var id = document.getElementById('admTovar').value; var it = naytiTovar(id); if (!it) return; inv.push({ uid: Date.now() + Math.random(), itemId: it.id, kupCena: 0, ap: 0 }); toast('📦 ' + it.name, 'gold'); sohranit(); render(); }
 function admVydatVseTovary() { for (var i = 0; i < tovari.length; i++) inv.push({ uid: Date.now() + Math.random() + i, itemId: tovari[i].id, kupCena: 0, ap: 0 }); toast('🎁 Все товары', 'gold'); sohranit(); render(); }
 function admOchistitSumku() { inv = []; toast('🗑️ Сумка очищена', 'ok'); sohranit(); render(); }
