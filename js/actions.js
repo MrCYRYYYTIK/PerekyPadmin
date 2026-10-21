@@ -165,7 +165,7 @@ function prodatLot(uid) {
   var prodano = Math.random() * 100 < shans;
   energ = energ - 1;
   if (prodano) {
-    var itog = l.moyaCena - komissiyaProdaZhi(l.moyaCena);
+    var itog = l.moyaCena;
     dengi = dengi + itog;
     loty.splice(idx, 1);
     prodalVsego++;
@@ -190,15 +190,37 @@ function prodatMgnovenno(uid) {
   var item = naytiTovar(moy.itemId);
   var maxC = maxCenaTovara(item, moy.ap);
   var cenaProd = Math.floor(maxC * 0.75);
-  var itog = cenaProd - komissiyaProdaZhi(cenaProd);
-  var prof = itog - moy.kupCena;
-  dengi = dengi + itog;
+  var prof = cenaProd - moy.kupCena;
+  dengi = dengi + cenaProd;
   energ = energ - 1;
   inv.splice(idx, 1);
   prodalVsego++;
   dobavitOpyt(Math.floor(cenaProd / EDINIC_OPYT_ZA_APGREYD));
   proveritDostizheniya();
-  toast('⚡ Срочно: ' + formatChislo(itog) + '₽', prof >= 0 ? 'ok' : 'err');
+  toast('⚡ Срочно: ' + formatChislo(cenaProd) + '₽', prof >= 0 ? 'ok' : 'err');
+  sohranit();
+  render();
+}
+
+function prodatVseSrochno() {
+  if (inv.length === 0) { toast('📦 Сумка пуста', 'err'); return; }
+  if (energ < 1) { toast('⚡ Нет энергии', 'err'); return; }
+  var summa = 0;
+  var kolvo = inv.length;
+  for (var i = 0; i < inv.length; i++) {
+    var m = inv[i];
+    var tovar = naytiTovar(m.itemId);
+    if (!tovar) continue;
+    var maxC = maxCenaTovara(tovar, m.ap);
+    summa += Math.floor(maxC * 0.75);
+  }
+  dengi += summa;
+  energ -= 1;
+  inv = [];
+  prodalVsego += kolvo;
+  dobavitOpyt(Math.floor(summa / EDINIC_OPYT_ZA_POKUPKU));
+  proveritDostizheniya();
+  toast('⚡ Продано ' + kolvo + ' товаров за ' + formatChislo(summa) + '₽', 'gold');
   sohranit();
   render();
 }
@@ -351,14 +373,30 @@ function proveritDohod() {
 
 function propustitVremya(uid) {
   var rnd = Math.random();
-  var minPropusk, opisanie;
-  if (rnd < 0.60) { minPropusk = 0.5; opisanie = '30 сек'; }
-  else if (rnd < 0.85) { minPropusk = 2; opisanie = '2 мин'; }
-  else if (rnd < 0.95) { minPropusk = 10; opisanie = '10 мин'; }
-  else if (rnd < 0.99) { minPropusk = 60; opisanie = '1 час'; }
-  else { minPropusk = 360; opisanie = '6 часов'; }
-  igrovoySdvig += minPropusk * 60 * 1000;
+  var realSek, opisanie;
+  if (rnd < 0.60) { realSek = 10; opisanie = '10 сек'; }
+  else if (rnd < 0.90) { realSek = 30; opisanie = '30 сек'; }
+  else { realSek = 60; opisanie = '60 сек (1 час)'; }
+  
+  igrovoySdvig += realSek * 60 * 1000;
   vremyaZahoda = Date.now();
+  
+  var l = null;
+  for (var i = 0; i < loty.length; i++) if (loty[i].uid == uid) l = loty[i];
+  
+  if (l) {
+    l.vremyaStart -= realSek * 1000;
+    l.vremyaAktivnosti -= realSek * 1000;
+    
+    if (Date.now() > l.vremyaAktivnosti) {
+      var item = naytiTovar(l.itemId);
+      if (item) {
+        rasschitatShansICena(l, item);
+        toast('😴 Покупатель ушёл! Ждать заново', 'err');
+      }
+    }
+  }
+  
   toast('⏩ Пропущено: ' + opisanie, 'gold');
   sohranit();
   render();
@@ -426,6 +464,13 @@ function kupitSkin(id) {
 
 function pereklTemu() { tema = (tema == 'dark') ? 'light' : 'dark'; primenitTemu(); sohranit(); render(); }
 function pereklModalki() { pokazyvatModalki = !pokazyvatModalki; sohranit(); render(); }
+
+function setCvet(c) {
+  cvet = c;
+  primenitTemu();
+  sohranit();
+  render();
+}
 
 var keysAnimating = false;
 var keysTekushchiy = null;
@@ -523,7 +568,7 @@ function otmenitKeys() {
 
 var rulAnimating = false;
 
-function krutitRul(cvet) {
+function krutitRul(cvetStavki) {
   if (rulAnimating) { toast('⏳ Крутится...', 'err'); return; }
   var stavka = parseInt(document.getElementById('rulStavka').value);
   if (isNaN(stavka) || stavka <= 0) { toast('❌ Введи ставку', 'err'); return; }
@@ -577,10 +622,10 @@ function krutitRul(cvet) {
     lentaEl2.style.transition = 'transform 3s cubic-bezier(0.1, 0.9, 0.3, 1)';
     lentaEl2.style.transform = 'translateX(' + targetX + 'px)';
     setTimeout(function() {
-      var vyigral = (cvet === pobedCvet);
+      var vyigral = (cvetStavki === pobedCvet);
       var vyigrysh = 0;
       if (vyigral) {
-        var mnozh = cvet === 'green' ? 14 : 2;
+        var mnozh = cvetStavki === 'green' ? 14 : 2;
         vyigrysh = stavka * mnozh;
         dengi += vyigrysh;
         rulPoslRezultat = '🎉 Выпало ' + pobednoe + ' (' + pobedCvet + ') — выиграл ' + formatChislo(vyigrysh) + '₽!';
@@ -624,6 +669,16 @@ function sdelatUpgrade(mnozhitel) {
   }
   upgradeVybranUid = null;
   sohranit();
+  render();
+}
+
+function setTab(t) {
+  tab = t;
+  var vseTaby = document.querySelectorAll('.tab');
+  for (var i = 0; i < vseTaby.length; i++) {
+    if (vseTaby[i].getAttribute('data-tab') == t) vseTaby[i].classList.add('active');
+    else vseTaby[i].classList.remove('active');
+  }
   render();
 }
 
