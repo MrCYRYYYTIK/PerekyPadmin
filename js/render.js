@@ -35,7 +35,7 @@ function render() {
 
   if (tab == 'market') renderBezopasno(renderMarket, c, v);
   else if (tab == 'inventory') renderBezopasno(renderInventory, c, v);
-  else if (tab == 'keysy') renderBezopasno(renderKeysy, c, v);
+  else if (tab == 'casino') renderBezopasno(renderCasino, c, v);
   else if (tab == 'food') renderBezopasno(renderFood, c, v);
   else if (tab == 'dom') renderBezopasno(renderDom, c, v);
   else if (tab == 'bank') renderBezopasno(renderBank, c, v);
@@ -60,8 +60,9 @@ function renderMarket(c, v) {
   }
   html += '</div>';
 
-  for (var i = 0; i < tovari.length; i++) {
-    var it = tovari[i];
+  var sorted = tovari.slice().sort(function(a, b) { return a.lvl - b.lvl; });
+  for (var i = 0; i < sorted.length; i++) {
+    var it = sorted[i];
     if (rynokCateg !== 'all' && it.category !== rynokCateg) continue;
     var zakr = it.lvl > lvl;
     var cena = randomCena(it.cena);
@@ -139,7 +140,23 @@ function renderInventory(c) {
   c.innerHTML = h;
 }
 
-function renderKeysy(c) {
+function renderCasino(c, v) {
+  var h = '<div class="casino-tabs">';
+  h += '<div class="casino-tab' + (casinoTab == 'keysy' ? ' active' : '') + '" onclick="setCasinoTab(\'keysy\')">🎁 Кейсы</div>';
+  h += '<div class="casino-tab' + (casinoTab == 'roulette' ? ' active' : '') + '" onclick="setCasinoTab(\'roulette\')">🎰 Рулетка</div>';
+  h += '<div class="casino-tab' + (casinoTab == 'upgrade' ? ' active' : '') + '" onclick="setCasinoTab(\'upgrade\')">🎲 Апгрейд</div>';
+  h += '</div>';
+
+  if (casinoTab == 'keysy') h += renderKeysyHtml();
+  else if (casinoTab == 'roulette') h += renderRouletteHtml();
+  else if (casinoTab == 'upgrade') h += renderUpgradeHtml();
+
+  c.innerHTML = h;
+}
+
+function setCasinoTab(t) { casinoTab = t; render(); }
+
+function renderKeysyHtml() {
   var h = '<div class="lot-hint" style="margin-bottom:10px;">🎁 Открывай кейсы — получай случайные призы!</div>';
   for (var i = 0; i < keysy.length; i++) {
     var k = keysy[i];
@@ -156,7 +173,75 @@ function renderKeysy(c) {
     }
     h += '</div></div>';
   }
-  c.innerHTML = h;
+  return h;
+}
+
+function renderRouletteHtml() {
+  var h = '';
+  h += '<div class="card gold">';
+  h += '<div class="card-name" style="margin-bottom:8px">🎰 Рулетка</div>';
+  h += '<div class="card-meta">Выбери цвет и сумму ставки</div>';
+  h += '</div>';
+  h += '<div class="card">';
+  h += '<div class="card-name" style="margin-bottom:6px">💰 Сумма ставки:</div>';
+  h += '<input type="number" id="rulStavka" placeholder="Введи ставку" value="500" style="width:100%;padding:12px;border-radius:8px;border:2px solid #66ccff;background:#222;color:white;font-size:16px;text-align:center;">';
+  h += '</div>';
+  h += '<div class="card red" style="cursor:pointer;" onclick="krutitRul(\'red\')">';
+  h += '<div class="card-name">🔴 Красное — ×2</div>';
+  h += '<div class="card-meta">Шанс 48.6%</div>';
+  h += '</div>';
+  h += '<div class="card" style="cursor:pointer;background:#222;" onclick="krutitRul(\'black\')">';
+  h += '<div class="card-name">⚫ Чёрное — ×2</div>';
+  h += '<div class="card-meta">Шанс 48.6%</div>';
+  h += '</div>';
+  h += '<div class="card green" style="cursor:pointer;" onclick="krutitRul(\'green\')">';
+  h += '<div class="card-name">🟢 Зелёное (0) — ×14</div>';
+  h += '<div class="card-meta">Шанс 2.7%</div>';
+  h += '</div>';
+  if (rulPoslRezultat) {
+    h += '<div class="card gold"><div style="text-align:center;font-size:16px;font-weight:bold;">' + rulPoslRezultat + '</div></div>';
+  }
+  return h;
+}
+
+function renderUpgradeHtml() {
+  var h = '<div class="lot-hint" style="margin-bottom:10px;">🎲 Улучши предмет ×2, ×3, ×5 или ×10 — или потеряй его!</div>';
+  if (upgradeResult) {
+    h += '<div class="card ' + (upgradeResult.indexOf('🎉') === 0 ? 'green' : 'red') + '">';
+    h += '<div style="text-align:center;font-size:16px;font-weight:bold;">' + upgradeResult + '</div>';
+    h += '</div>';
+    h += '<button class="btn full" onclick="upgradeResult = \'\'; render();">OK</button>';
+    return h;
+  }
+  if (inv.length === 0) return h + '<div class="empty">📦 Сумка пуста. Купи что-нибудь!</div>';
+  h += '<div class="card purple">';
+  h += '<div class="card-name">Выбери предмет:</div>';
+  h += '<select id="upgradeSelect" style="width:100%;padding:10px;border-radius:6px;border:2px solid #555;background:#222;color:white;margin-top:6px;" onchange="vybratUpgrade(this.value)">';
+  h += '<option value="">— Выбери —</option>';
+  for (var i = 0; i < inv.length; i++) {
+    var m = inv[i];
+    var t = naytiTovar(m.itemId);
+    if (!t) continue;
+    var sel = (upgradeVybranUid == m.uid) ? ' selected' : '';
+    h += '<option value="' + m.uid + '"' + sel + '>' + t.name + (m.ap > 0 ? ' +' + m.ap : '') + ' — ' + formatChislo(m.kupCena) + '₽</option>';
+  }
+  h += '</select></div>';
+  if (upgradeVybranUid) {
+    var vybran = null;
+    for (var k = 0; k < inv.length; k++) if (inv[k].uid == upgradeVybranUid) vybran = inv[k];
+    if (vybran) {
+      var tovar = naytiTovar(vybran.itemId);
+      h += '<div class="card"><div class="card-name">' + tovar.name + '</div>';
+      h += '<div class="card-meta">Текущая цена: ' + formatChislo(vybran.kupCena) + '₽</div></div>';
+      h += '<div class="card gold"><div class="card-name" style="margin-bottom:8px">Выбери множитель:</div>';
+      h += '<button class="btn green full" onclick="sdelatUpgrade(2)">×2 — 50% шанс → ' + formatChislo(vybran.kupCena * 2) + '₽</button>';
+      h += '<button class="btn gold full" onclick="sdelatUpgrade(3)">×3 — 30% шанс → ' + formatChislo(vybran.kupCena * 3) + '₽</button>';
+      h += '<button class="btn purple full" onclick="sdelatUpgrade(5)">×5 — 15% шанс → ' + formatChislo(vybran.kupCena * 5) + '₽</button>';
+      h += '<button class="btn red full" onclick="sdelatUpgrade(10)">×10 — 5% шанс → ' + formatChislo(vybran.kupCena * 10) + '₽</button>';
+      h += '</div>';
+    }
+  }
+  return h;
 }
 
 function renderFood(c, v) {
@@ -181,12 +266,10 @@ function renderDom(c, v) {
   var tekushchiy = naytiDom(moeDom);
   var sonTek = sonDomaSUp(tekushchiy, domUp);
   var dohodTek = dohodDomaSUp(tekushchiy, domUp);
-
   hd += '<div class="dom-card"><div class="dom-emoji">' + tekushchiy.icon + '</div>';
   hd += '<div class="dom-name">' + tekushchiy.name + (domUp > 0 ? ' +' + domUp : '') + '</div>';
   hd += '<div class="dom-desc">Сон: +' + sonTek + ' ⚡</div>';
   hd += '<div class="dom-desc">Доход: +' + formatChislo(dohodTek) + '₽/день</div></div>';
-
   var mojSon2 = (poslSonDen !== v.den) && (v.chas >= SON_S || v.chas < SON_DO_CHASA);
   hd += '<div class="card purple">';
   if (mojSon2 && energ < maxEnerg) hd += '<button class="btn purple full" onclick="sest()">😴 Поспать</button>';
@@ -194,7 +277,6 @@ function renderDom(c, v) {
   else if (poslSonDen === v.den) hd += '<button class="btn full" disabled>✅ Уже спал</button>';
   else hd += '<button class="btn full" disabled>⏳ Спать с 22:00</button>';
   hd += '</div>';
-
   if (domUp < MAX_DOM_UP && tekushchiy.cena > 0) {
     var upStoim = stoimostUpDoma(tekushchiy, domUp);
     hd += '<div class="card purple"><div class="card-name" style="margin-bottom:6px">🏗️ Прокачка дома</div>';
@@ -204,9 +286,7 @@ function renderDom(c, v) {
     else hd += '<button class="btn full" disabled>Нужно ' + formatChislo(upStoim) + '₽</button>';
     hd += '</div>';
   }
-
   hd += '<div class="lot-refresh" style="margin:10px 0;text-align:center;font-size:12px;color:#888">🏠 Все дома</div>';
-
   for (var dd = 0; dd < doma.length; dd++) {
     var d2 = doma[dd];
     if (d2.id == 'street') continue;
@@ -220,9 +300,7 @@ function renderDom(c, v) {
     else hd += '<button class="btn small" disabled>Нет</button>';
     hd += '</div></div>';
   }
-
   hd += '<div class="lot-refresh" style="margin:16px 0 8px;text-align:center;font-size:12px;color:#888">🏗️ Второй дом</div>';
-
   if (!vtoroyDom) {
     var cenaMesta = tekushchiy.cena;
     if (cenaMesta > 0) {
@@ -260,7 +338,6 @@ function renderDom(c, v) {
     }
     hd += '</div>';
   }
-
   c.innerHTML = hd;
 }
 
@@ -327,21 +404,16 @@ function renderSettings(c, v) {
   var hst = '';
   hst += '<div class="setting-row"><div class="setting-info"><div class="setting-name">🌗 Тёмная тема</div></div>';
   hst += '<div class="switch' + (tema == 'dark' ? ' on' : '') + '" onclick="pereklTemu()"></div></div>';
-
   hst += '<div class="setting-row"><div class="setting-info"><div class="setting-name">🎰 Окна при заходе</div></div>';
   hst += '<div class="switch' + (pokazyvatModalki ? ' on' : '') + '" onclick="pereklModalki()"></div></div>';
-
   hst += '<div class="card purple"><div class="card-name">📅 Игровое время</div>';
   hst += '<div class="card-meta">День ' + v.den + ' · ' + formatTime(v.chas, v.min) + '</div>';
   hst += '<div class="card-meta">В игре: 1 сек = 1 мин · Вне игры: 1 сек = 1 сек</div></div>';
-
   hst += '<div class="card"><div class="card-name">📊 Статистика</div>';
   hst += '<div class="card-meta">Куплено: ' + kupilVsego + ' · Продано: ' + prodalVsego + '</div>';
   hst += '<div class="card-meta">Уровень: ' + lvl + ' · Энергия: ' + energ + '/' + maxEnerg + '</div></div>';
-
   hst += '<div class="card"><div class="card-name" style="margin-bottom:8px">🔐 Секретный код</div>';
   hst += '<button class="btn full" onclick="otkritParol()">🔑 Ввести код</button></div>';
-
   hst += '<div class="card red"><div class="card-name" style="margin-bottom:8px">🗑️ Сброс</div>';
   hst += '<button class="btn red full" onclick="sbrosProgressa()">Сбросить прогресс</button></div>';
   c.innerHTML = hst;
