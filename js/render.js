@@ -27,9 +27,22 @@ function render() {
   primenitTemu();
   document.getElementById('balance').textContent = formatChislo(dengi) + ' ₽';
   document.getElementById('level').textContent = lvl;
-  document.getElementById('energy').textContent = energ + '/' + maxEnerg;
+  
+  var v_energ = vremyaIgry();
+  var tekMin_energ = v_energ.den * 1440 + v_energ.chas * 60 + v_energ.min;
+  var doEnerg = 30;
+  if (poslEnergMin > 0) {
+    var ostalos_energ = 30 - (tekMin_energ - poslEnergMin);
+    if (ostalos_energ < 0) ostalos_energ = 0;
+    doEnerg = ostalos_energ;
+  }
+  if (energ < maxEnerg && doEnerg > 0) {
+    document.getElementById('energy').textContent = energ + '/' + maxEnerg + ' (через ' + doEnerg + ' мин)';
+  } else {
+    document.getElementById('energy').textContent = energ + '/' + maxEnerg;
+  }
+  
   obnovitLvlBar();
-
   var c = document.getElementById('content');
   var v = vremyaIgry();
 
@@ -47,6 +60,10 @@ function render() {
 function renderMarket(c, v) {
   var html = '';
   if (dolg > 0) html += '<div class="banner" style="background:linear-gradient(135deg,#4a0000,#6a0000);border-color:#ff6666">🏦 Долг: ' + formatChislo(dolg) + '₽</div>';
+  
+  if (moeDom === 'street') {
+    html += '<div class="banner" style="cursor:pointer;background:linear-gradient(135deg,#2a004a,#44006a);border-color:#c966ff;" onclick="setTab(\'dom\')">🛏️ Ты спишь на улице — купи дом для бонуса энергии!</div>';
+  }
 
   var categories = [
     { id: 'all', name: '📋 Все' }, { id: 'tech', name: '📱 Техника' },
@@ -83,6 +100,10 @@ function renderInventory(c) {
   var h = '';
   if (loty.length === 0 && inv.length === 0) { c.innerHTML = '<div class="empty">📦 Пусто. Купи что-нибудь!</div>'; return; }
 
+  if (inv.length > 0) {
+    h += '<div class="card gold"><button class="btn gold full" onclick="prodatVseSrochno()">⚡ Продать всё срочно (75% от цены)</button></div>';
+  }
+
   for (var w = 0; w < loty.length; w++) {
     var l = loty[w];
     var t2 = naytiTovar(l.itemId);
@@ -106,6 +127,8 @@ function renderInventory(c) {
     h += '<div class="card-meta">Куплено: ' + formatChislo(l.kupCena) + '₽</div>';
     if (gotov && sekAktiv > 0) h += '<div class="lot-chance">✅ Шанс ' + shans + '% · успей за ' + sekAktiv + 'с</div>';
     else h += '<div class="lot-timer">⏳ ' + sek + ' сек · шанс ' + shans + '%</div>';
+    var pribyl = l.moyaCena - l.kupCena;
+    h += '<div class="card-meta" style="margin-top:4px;">Прибыль: <span style="color:' + (pribyl >= 0 ? '#66ff66' : '#ff6666') + '">' + (pribyl >= 0 ? '+' : '') + formatChislo(pribyl) + '₽</span></div>';
     h += '</div><div class="card-price">' + formatChislo(l.moyaCena) + ' ₽</div>';
     h += '</div><div class="lot-bar"><div class="lot-bar-in" style="width:' + progress + '%"></div></div>';
     h += '<div class="card-row" style="margin-top:8px">';
@@ -146,11 +169,9 @@ function renderCasino(c, v) {
   h += '<div class="casino-tab' + (casinoTab == 'roulette' ? ' active' : '') + '" onclick="setCasinoTab(\'roulette\')">🎰 Рулетка</div>';
   h += '<div class="casino-tab' + (casinoTab == 'upgrade' ? ' active' : '') + '" onclick="setCasinoTab(\'upgrade\')">🎲 Апгрейд</div>';
   h += '</div>';
-
   if (casinoTab == 'keysy') h += renderKeysyHtml();
   else if (casinoTab == 'roulette') h += renderRouletteHtml();
   else if (casinoTab == 'upgrade') h += renderUpgradeHtml();
-
   c.innerHTML = h;
 }
 
@@ -404,8 +425,21 @@ function renderSettings(c, v) {
   var hst = '';
   hst += '<div class="setting-row"><div class="setting-info"><div class="setting-name">🌗 Тёмная тема</div></div>';
   hst += '<div class="switch' + (tema == 'dark' ? ' on' : '') + '" onclick="pereklTemu()"></div></div>';
+  
   hst += '<div class="setting-row"><div class="setting-info"><div class="setting-name">🎰 Окна при заходе</div></div>';
   hst += '<div class="switch' + (pokazyvatModalki ? ' on' : '') + '" onclick="pereklModalki()"></div></div>';
+
+  hst += '<div class="card"><div class="card-name" style="margin-bottom:8px">🎨 Цвет интерфейса</div>';
+  hst += '<div class="cvet-выбор">';
+  hst += '<div class="cvet-krug cvet-krug-blue' + (cvet == 'blue' ? ' active' : '') + '" onclick="setCvet(\'blue\')"></div>';
+  hst += '<div class="cvet-krug cvet-krug-green' + (cvet == 'green' ? ' active' : '') + '" onclick="setCvet(\'green\')"></div>';
+  hst += '<div class="cvet-krug cvet-krug-purple' + (cvet == 'purple' ? ' active' : '') + '" onclick="setCvet(\'purple\')"></div>';
+  hst += '<div class="cvet-krug cvet-krug-red' + (cvet == 'red' ? ' active' : '') + '" onclick="setCvet(\'red\')"></div>';
+  hst += '<div class="cvet-krug cvet-krug-orange' + (cvet == 'orange' ? ' active' : '') + '" onclick="setCvet(\'orange\')"></div>';
+  hst += '<div class="cvet-krug cvet-krug-yellow' + (cvet == 'yellow' ? ' active' : '') + '" onclick="setCvet(\'yellow\')"></div>';
+  hst += '<div class="cvet-krug cvet-krug-pink' + (cvet == 'pink' ? ' active' : '') + '" onclick="setCvet(\'pink\')"></div>';
+  hst += '</div></div>';
+
   hst += '<div class="card purple"><div class="card-name">📅 Игровое время</div>';
   hst += '<div class="card-meta">День ' + v.den + ' · ' + formatTime(v.chas, v.min) + '</div>';
   hst += '<div class="card-meta">В игре: 1 сек = 1 мин · Вне игры: 1 сек = 1 сек</div></div>';
