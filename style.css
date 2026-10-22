@@ -1,4 +1,3 @@
-/* Базовые стили */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
@@ -199,46 +198,54 @@ body.light .cvet-krug.active { border-color: black; box-shadow: 0 0 10px rgba(0,
 .cvet-krug-yellow { background: #ffdd33; }
 .cvet-krug-pink { background: #ff66aa; }
 
-/* Применение цветов */
-body.cvet-green .tab.active,
-body.cvet-green .btn:not(.green):not(.red):not(.gold):not(.purple),
-body.cvet-green .cat.active,
-body.cvet-green .clock,
-body.cvet-green .stat b { background-color: #66ff66; color: #000; }
-body.cvet-green .btn.green { background: #66ff66; }
+/* ПРИМЕНЕНИЕ ЦВЕТОВ (текст и фон) */
+
+/* Зелёный */
+body.cvet-green .clock, body.cvet-green .stat b { color: #66ff66 !important; }
+body.cvet-green .tab.active { background-color: #66ff66; color: #000 !important; }
+body.cvet-green .cat.active { background-color: #66ff66; color: #000 !important; }
+body.cvet-green .btn:not(.green):not(.red):not(.gold):not(.purple) { background-color: #66ff66; color: #000 !important; }
 body.cvet-green .lvl-bar-in { background: linear-gradient(90deg, #66ff66, #33aa33); }
 
-body.cvet-purple .tab.active,
-body.cvet-purple .btn:not(.green):not(.red):not(.gold):not(.purple),
-body.cvet-purple .cat.active,
-body.cvet-purple .clock,
-body.cvet-purple .stat b { background-color: #c966ff; color: #fff; }
+/* Фиолетовый */
+body.cvet-purple .clock, body.cvet-purple .stat b { color: #c966ff !important; }
+body.cvet-purple .tab.active { background-color: #c966ff; color: #fff !important; }
+body.cvet-purple .cat.active { background-color: #c966ff; color: #fff !important; }
+body.cvet-purple .btn:not(.green):not(.red):not(.gold):not(.purple) { background-color: #c966ff; color: #fff !important; }
 body.cvet-purple .lvl-bar-in { background: linear-gradient(90deg, #c966ff, #8844cc); }
 
-body.cvet-red .tab.active,
-body.cvet-red .btn:not(.green):not(.red):not(.gold):not(.purple),
-body.cvet-red .cat.active,
-body.cvet-red .clock,
-body.cvet-red .stat b { background-color: #ff6666; color: #fff; }
+/* Красный */
+body.cvet-red .clock, body.cvet-red .stat b { color: #ff6666 !important; }
+body.cvet-red .tab.active { background-color: #ff6666; color: #fff !important; }
+body.cvet-red .cat.active { background-color: #ff6666; color: #fff !important; }
+body.cvet-red .btn:not(.green):not(.red):not(.gold):not(.purple) { background-color: #ff6666; color: #fff !important; }
 body.cvet-red .lvl-bar-in { background: linear-gradient(90deg, #ff6666, #cc3333); }
 
-body.cvet-orange .tab.active,
-body.cvet-orange .btn:not(.green):not(.red):not(.gold):not(.purple),
-body.cvet-orange .cat.active,
-body.cvet-orange .clock,
-body.cvet-orange .stat b { background-color: #ff9933; color: #000; }
+/* Оранжевый */
+body.cvet-orange .clock, body.cvet-orange .stat b { color: #ff9933 !important; }
+body.cvet-orange .tab.active { background-color: #ff9933; color: #000 !important; }
+body.cvet-orange .cat.active { background-color: #ff9933; color: #000 !important; }
+body.cvet-orange .btn:not(.green):not(.red):not(.gold):not(.purple) { background-color: #ff9933; color: #000 !important; }
 body.cvet-orange .lvl-bar-in { background: linear-gradient(90deg, #ff9933, #cc6600); }
 
-body.cvet-yellow .tab.active,
-body.cvet-yellow .btn:not(.green):not(.red):not(.gold):not(.purple),
-body.cvet-yellow .cat.active,
-body.cvet-yellow .clock,
-body.cvet-yellow .stat b { background-color: #ffdd33; color: #000; }
+/* Жёлтый */
+body.cvet-yellow .clock, body.cvet-yellow .stat b { color: #ffdd33 !important; }
+body.cvet-yellow .tab.active { background-color: #ffdd33; color: #000 !important; }
+body.cvet-yellow .cat.active { background-color: #ffdd33; color: #000 !important; }
+body.cvet-yellow .btn:not(.green):not(.red):not(.gold):not(.purple) { background-color: #ffdd33; color: #000 !important; }
 body.cvet-yellow .lvl-bar-in { background: linear-gradient(90deg, #ffdd33, #ccaa00); }
 
-body.cvet-pink .tab.active,
-body.cvet-pink .btn:not(.green):not(.red):not(.gold):not(.purple),
-body.cvet-pink .cat.active,
-body.cvet-pink .clock,
-body.cvet-pink .stat b { background-color: #ff66aa; color: #fff; }
+/* Розовый */
+body.cvet-pink .clock, body.cvet-pink .stat b { color: #ff66aa !important; }
+body.cvet-pink .tab.active { background-color: #ff66aa; color: #fff !important; }
+body.cvet-pink .cat.active { background-color: #ff66aa; color: #fff !important; }
+body.cvet-pink .btn:not(.green):not(.red):not(.gold):not(.purple) { background-color: #ff66aa; color: #fff !important; }
 body.cvet-pink .lvl-bar-in { background: linear-gradient(90deg, #ff66aa, #cc3377); }
+
+/* Светлая тема — цвета темнее для контраста */
+body.light.cvet-green .clock, body.light.cvet-green .stat b { color: #009900 !important; }
+body.light.cvet-purple .clock, body.light.cvet-purple .stat b { color: #8800cc !important; }
+body.light.cvet-red .clock, body.light.cvet-red .stat b { color: #cc0000 !important; }
+body.light.cvet-orange .clock, body.light.cvet-orange .stat b { color: #cc6600 !important; }
+body.light.cvet-yellow .clock, body.light.cvet-yellow .stat b { color: #aa8800 !important; }
+body.light.cvet-pink .clock, body.light.cvet-pink .stat b { color: #cc3377 !important; }
