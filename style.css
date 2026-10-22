@@ -1,3 +1,8 @@
+:root {
+  --accent: #66ccff;
+  --accent-text: #000;
+}
+
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
@@ -17,26 +22,24 @@ body.light .header { background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
 .version { position: absolute; top: 6px; right: 10px; font-size: 10px; color: #666; letter-spacing: 0.5px; opacity: 0.8; font-weight: normal; }
 body.light .version { color: #999; }
 
-.clock { font-size: 14px; color: #66ccff; font-weight: bold; margin-bottom: 6px; }
-body.light .clock { color: #0066cc; }
+.clock { font-size: 14px; color: var(--accent); font-weight: bold; margin-bottom: 6px; }
 
 .header h1 { font-size: 18px; margin-bottom: 8px; }
 .lvl-bar-wrap { margin-bottom: 10px; }
 .lvl-bar { background: #222; border-radius: 6px; height: 10px; overflow: hidden; margin: 0 auto 4px; max-width: 280px; }
 body.light .lvl-bar { background: #ddd; }
-.lvl-bar-in { background: linear-gradient(90deg, #66ccff, #667eea); height: 100%; transition: width 0.5s; }
+.lvl-bar-in { background: linear-gradient(90deg, var(--accent), #667eea); height: 100%; transition: width 0.5s; }
 .lvl-info { font-size: 11px; color: #888; }
 body.light .lvl-info { color: #666; }
 
 .stats { display: flex; justify-content: space-around; }
 .stat { font-size: 12px; }
-.stat b { display: block; font-size: 16px; color: #66ccff; }
-body.light .stat b { color: #0066cc; }
+.stat b { display: block; font-size: 16px; color: var(--accent); }
 
 .tabs { display: flex; gap: 4px; margin-bottom: 10px; overflow-x: auto; padding-bottom: 4px; }
 .tab { padding: 8px 10px; text-align: center; background: #333; border-radius: 8px; cursor: pointer; font-size: 11px; white-space: nowrap; flex-shrink: 0; }
 body.light .tab { background: #fff; box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
-.tab.active { background: #66ccff; color: black; font-weight: bold; }
+.tab.active { background: var(--accent); color: var(--accent-text); font-weight: bold; }
 
 .card { background: #333; padding: 12px; border-radius: 8px; margin-bottom: 8px; }
 body.light .card { background: #fff; box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
@@ -58,13 +61,13 @@ body.light .card-meta { color: #666; }
 .card-price { color: #66ff66; font-size: 14px; }
 body.light .card-price { color: #008800; }
 
-.btn { background: #66ccff; color: black; border: none; padding: 8px 12px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 12px; font-family: inherit; }
+.btn { background: var(--accent); color: var(--accent-text); border: none; padding: 8px 12px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 12px; font-family: inherit; }
 .btn:disabled { background: #555; color: #888; cursor: not-allowed; }
 body.light .btn:disabled { background: #ccc; color: #666; }
-.btn.green { background: #66ff66; }
-.btn.red { background: #ff6666; }
-.btn.gold { background: gold; }
-.btn.purple { background: #c966ff; }
+.btn.green { background: #66ff66; color: #000; }
+.btn.red { background: #ff6666; color: #fff; }
+.btn.gold { background: gold; color: #000; }
+.btn.purple { background: #c966ff; color: #fff; }
 .btn.small { padding: 6px 10px; font-size: 11px; }
 .btn.full { width: 100%; padding: 10px; font-size: 13px; margin-top: 6px; }
 
@@ -78,8 +81,7 @@ body.light .lot-bar { background: #ddd; }
 .lot-bar-in { background: linear-gradient(90deg, #66ff66, #ffaa00); height: 100%; transition: width 0.5s; }
 .lot-timer { font-size: 11px; color: #ffaa00; margin-top: 4px; }
 .lot-hint { font-size: 10px; color: #888; margin-top: 4px; text-align: center; }
-.lot-chance { font-size: 11px; color: #66ccff; margin-top: 4px; }
-body.light .lot-chance { color: #0066cc; }
+.lot-chance { font-size: 11px; color: var(--accent); margin-top: 4px; }
 
 .banner { background: linear-gradient(135deg, #663300, #996600); border: 2px solid gold; border-radius: 8px; padding: 10px; margin-bottom: 8px; text-align: center; font-size: 12px; font-weight: bold; }
 body.light .banner { background: linear-gradient(135deg, #ffe0b0, #ffcc80); color: #111; }
@@ -113,7 +115,7 @@ body.light .setting-row { background: #fff; box-shadow: 0 1px 4px rgba(0,0,0,0.1
 body.light .setting-desc { color: #666; }
 
 .switch { width: 50px; height: 28px; background: #555; border-radius: 14px; position: relative; cursor: pointer; transition: background 0.2s; }
-.switch.on { background: #66ccff; }
+.switch.on { background: var(--accent); }
 .switch::after { content: ''; position: absolute; top: 3px; left: 3px; width: 22px; height: 22px; background: white; border-radius: 50%; transition: left 0.2s; }
 .switch.on::after { left: 25px; }
 
@@ -126,10 +128,9 @@ body.light .dom-desc { color: #555; }
 
 .modal-bg { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); display: none; align-items: center; justify-content: center; z-index: 200; padding: 16px; }
 .modal-bg.show { display: flex; }
-.modal { background: #333; border-radius: 14px; padding: 20px; width: 100%; max-width: 380px; text-align: center; border: 2px solid #66ccff; }
+.modal { background: #333; border-radius: 14px; padding: 20px; width: 100%; max-width: 380px; text-align: center; border: 2px solid var(--accent); }
 body.light .modal { background: #fff; color: #111; }
-.modal h2 { font-size: 20px; margin-bottom: 12px; color: #66ccff; }
-body.light .modal h2 { color: #0066cc; }
+.modal h2 { font-size: 20px; margin-bottom: 12px; color: var(--accent); }
 .modal-emoji { font-size: 70px; margin: 10px 0; animation: pulse 1.5s infinite; }
 @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
 .modal p { font-size: 14px; margin-bottom: 8px; line-height: 1.4; }
@@ -150,21 +151,18 @@ body.light .food-bonus { color: #008800; }
 
 .admin-section { background: #222; padding: 10px; border-radius: 8px; margin-bottom: 8px; text-align: left; }
 body.light .admin-section { background: #f0f0f0; }
-.admin-title { font-size: 13px; font-weight: bold; color: #66ccff; margin-bottom: 8px; }
-body.light .admin-title { color: #0066cc; }
+.admin-title { font-size: 13px; font-weight: bold; color: var(--accent); margin-bottom: 8px; }
 .admin-btns { display: flex; gap: 4px; flex-wrap: wrap; }
 .admin-btns .btn { flex: 1; min-width: 90px; }
 select option { background: #222; color: white; }
 body.light select option { background: white; color: #111; }
 #modalObnovlenie .modal { max-width: 340px; }
 
-/* Категории на рынке */
 .cats { display: flex; gap: 6px; margin-bottom: 10px; overflow-x: auto; padding-bottom: 4px; }
 .cat { padding: 6px 12px; background: #333; border-radius: 16px; font-size: 11px; white-space: nowrap; cursor: pointer; flex-shrink: 0; border: 2px solid transparent; }
 body.light .cat { background: #fff; box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
-.cat.active { background: #66ccff; color: black; font-weight: bold; border-color: #66ccff; }
+.cat.active { background: var(--accent); color: var(--accent-text); font-weight: bold; border-color: var(--accent); }
 
-/* Казино */
 .casino-tabs { display: flex; gap: 6px; margin-bottom: 10px; }
 .casino-tab { flex: 1; padding: 10px; text-align: center; background: #333; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: bold; }
 body.light .casino-tab { background: #fff; box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
@@ -184,7 +182,6 @@ body.light .keys-zone { background: #f5f5f5; border-color: #ccc; }
 body.light .keys-card { background: #fff; border-color: #ddd; }
 body.light .keys-card.win { background: linear-gradient(135deg, #fff3b0, #ffe680); }
 
-/* Цвета интерфейса */
 .cvet-выбор { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
 .cvet-krug { width: 36px; height: 36px; border-radius: 50%; cursor: pointer; border: 3px solid transparent; transition: transform 0.2s; }
 .cvet-krug:active { transform: scale(0.9); }
@@ -197,55 +194,3 @@ body.light .cvet-krug.active { border-color: black; box-shadow: 0 0 10px rgba(0,
 .cvet-krug-orange { background: #ff9933; }
 .cvet-krug-yellow { background: #ffdd33; }
 .cvet-krug-pink { background: #ff66aa; }
-
-/* ПРИМЕНЕНИЕ ЦВЕТОВ (текст и фон) */
-
-/* Зелёный */
-body.cvet-green .clock, body.cvet-green .stat b { color: #66ff66 !important; }
-body.cvet-green .tab.active { background-color: #66ff66; color: #000 !important; }
-body.cvet-green .cat.active { background-color: #66ff66; color: #000 !important; }
-body.cvet-green .btn:not(.green):not(.red):not(.gold):not(.purple) { background-color: #66ff66; color: #000 !important; }
-body.cvet-green .lvl-bar-in { background: linear-gradient(90deg, #66ff66, #33aa33); }
-
-/* Фиолетовый */
-body.cvet-purple .clock, body.cvet-purple .stat b { color: #c966ff !important; }
-body.cvet-purple .tab.active { background-color: #c966ff; color: #fff !important; }
-body.cvet-purple .cat.active { background-color: #c966ff; color: #fff !important; }
-body.cvet-purple .btn:not(.green):not(.red):not(.gold):not(.purple) { background-color: #c966ff; color: #fff !important; }
-body.cvet-purple .lvl-bar-in { background: linear-gradient(90deg, #c966ff, #8844cc); }
-
-/* Красный */
-body.cvet-red .clock, body.cvet-red .stat b { color: #ff6666 !important; }
-body.cvet-red .tab.active { background-color: #ff6666; color: #fff !important; }
-body.cvet-red .cat.active { background-color: #ff6666; color: #fff !important; }
-body.cvet-red .btn:not(.green):not(.red):not(.gold):not(.purple) { background-color: #ff6666; color: #fff !important; }
-body.cvet-red .lvl-bar-in { background: linear-gradient(90deg, #ff6666, #cc3333); }
-
-/* Оранжевый */
-body.cvet-orange .clock, body.cvet-orange .stat b { color: #ff9933 !important; }
-body.cvet-orange .tab.active { background-color: #ff9933; color: #000 !important; }
-body.cvet-orange .cat.active { background-color: #ff9933; color: #000 !important; }
-body.cvet-orange .btn:not(.green):not(.red):not(.gold):not(.purple) { background-color: #ff9933; color: #000 !important; }
-body.cvet-orange .lvl-bar-in { background: linear-gradient(90deg, #ff9933, #cc6600); }
-
-/* Жёлтый */
-body.cvet-yellow .clock, body.cvet-yellow .stat b { color: #ffdd33 !important; }
-body.cvet-yellow .tab.active { background-color: #ffdd33; color: #000 !important; }
-body.cvet-yellow .cat.active { background-color: #ffdd33; color: #000 !important; }
-body.cvet-yellow .btn:not(.green):not(.red):not(.gold):not(.purple) { background-color: #ffdd33; color: #000 !important; }
-body.cvet-yellow .lvl-bar-in { background: linear-gradient(90deg, #ffdd33, #ccaa00); }
-
-/* Розовый */
-body.cvet-pink .clock, body.cvet-pink .stat b { color: #ff66aa !important; }
-body.cvet-pink .tab.active { background-color: #ff66aa; color: #fff !important; }
-body.cvet-pink .cat.active { background-color: #ff66aa; color: #fff !important; }
-body.cvet-pink .btn:not(.green):not(.red):not(.gold):not(.purple) { background-color: #ff66aa; color: #fff !important; }
-body.cvet-pink .lvl-bar-in { background: linear-gradient(90deg, #ff66aa, #cc3377); }
-
-/* Светлая тема — цвета темнее для контраста */
-body.light.cvet-green .clock, body.light.cvet-green .stat b { color: #009900 !important; }
-body.light.cvet-purple .clock, body.light.cvet-purple .stat b { color: #8800cc !important; }
-body.light.cvet-red .clock, body.light.cvet-red .stat b { color: #cc0000 !important; }
-body.light.cvet-orange .clock, body.light.cvet-orange .stat b { color: #cc6600 !important; }
-body.light.cvet-yellow .clock, body.light.cvet-yellow .stat b { color: #aa8800 !important; }
-body.light.cvet-pink .clock, body.light.cvet-pink .stat b { color: #cc3377 !important; }
