@@ -1,4 +1,4 @@
-var SAVE_VERSION = 6;
+var SAVE_VERSION = 7;
 var SAVE_KEY_LOCAL = 'perekup';
 var SAVE_KEY_VK = 'perekup_save_v2';
 
@@ -19,7 +19,7 @@ var dolg = 0;
 var activeSkin = '👤';
 var tab = 'market';
 var tema = 'dark';
-var cvet = 'blue'; // 'blue' | 'green' | 'purple' | 'red' | 'orange' | 'yellow' | 'pink'
+var cvet = 'blue';
 var moeDom = 'street';
 var vtoroyDom = null;
 var domUp = 0;
@@ -76,13 +76,21 @@ function formatTime(chas, min) {
 }
 
 function primenitTemu() {
-  document.body.classList.remove('cvet-blue', 'cvet-green', 'cvet-purple', 'cvet-red', 'cvet-orange', 'cvet-yellow', 'cvet-pink');
   if (tema == 'light') document.body.classList.add('light');
   else document.body.classList.remove('light');
   
-  if (cvet && cvet !== 'blue') {
-    document.body.classList.add('cvet-' + cvet);
-  }
+  var cvetMap = {
+    blue: { accent: '#66ccff', text: '#000' },
+    green: { accent: '#66ff66', text: '#000' },
+    purple: { accent: '#c966ff', text: '#fff' },
+    red: { accent: '#ff6666', text: '#fff' },
+    orange: { accent: '#ff9933', text: '#000' },
+    yellow: { accent: '#ffdd33', text: '#000' },
+    pink: { accent: '#ff66aa', text: '#fff' }
+  };
+  var cv = cvetMap[cvet] || cvetMap.blue;
+  document.documentElement.style.setProperty('--accent', cv.accent);
+  document.documentElement.style.setProperty('--accent-text', cv.text);
 }
 
 function sobratSaveObekt() {
@@ -347,4 +355,4 @@ function dohodDomaSUp(dom, up) {
 
 function sonDomaSUp(dom, up) {
   return Math.floor(dom.son * (1 + up * 0.5));
-    }
+}
