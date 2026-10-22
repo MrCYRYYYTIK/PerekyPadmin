@@ -117,7 +117,7 @@ var tovari = [
   { id: 'car_sport', name: '🏎️ Спорткар', cena: 12000000, lvl: 15, ap: 3000000, category: 'auto' },
   { id: 'penthouse', name: '🏘️ Пентхаус', cena: 25000000, lvl: 18, ap: 6000000, category: 'realty' },
   { id: 'island', name: '🏝️ Остров', cena: 50000000, lvl: 21, ap: 12000000, category: 'realty' },
-  { id: 'car_super', name: '⚡ СУПЕР-КАР', cena: 100000000, lvl: 25, ap: 25000000, category: 'auto' },
+  { id: 'car_super', name: '⚡ Tesla Roadster', cena: 100000000, lvl: 25, ap: 25000000, category: 'auto' },
   { id: 'watch', name: '⌚ Умные часы', cena: 5000, lvl: 2, ap: 1200, category: 'tech' },
   { id: 'jacket', name: '🧥 Куртка', cena: 4000, lvl: 1, ap: 1000, category: 'clothes' },
   { id: 'glasses', name: '🕶️ Очки', cena: 15000, lvl: 2, ap: 4000, category: 'clothes' },
