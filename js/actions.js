@@ -457,7 +457,7 @@ function kupitSkin(id) {
   render();
 }
 
-function pereklTemu() { tema = (tema == 'dark') ? 'light' : 'dark'; primenitTemu(); sohranit(); render(); }
+function pereklTemu() { tema = (tema == 'dark') ? 'light' : 'dark'; primenitTemu(); sohranit(); render(); setTimeout(primenitTemu, 100); }
 function pereklModalki() { pokazyvatModalki = !pokazyvatModalki; sohranit(); render(); }
 
 function setCvet(c) {
@@ -465,6 +465,8 @@ function setCvet(c) {
   primenitTemu();
   sohranit();
   render();
+  setTimeout(function() { primenitTemu(); }, 100);
+  setTimeout(function() { primenitTemu(); }, 300);
 }
 
 var keysAnimating = false;
@@ -767,4 +769,4 @@ function admProdatVseLoty() { if (loty.length === 0) return toast('Нет лот
 function admOchistitLoty() { if (loty.length === 0) return toast('Нет лотов', 'err'); for (var i = 0; i < loty.length; i++) inv.push({ uid: Date.now() + Math.random() + i, itemId: loty[i].itemId, kupCena: loty[i].kupCena, ap: loty[i].ap }); loty = []; toast('🗑️ Лоты в сумку', 'ok'); sohranit(); render(); }
 function admObolg() { dolg = 0; platilDolg = true; toast('✅ Долг обнулён', 'gold'); sohranit(); render(); }
 function admBystroBogat() { dengi += 10000000; lvl = 50; maxEnerg = 20 + lvl * 2; opyt = trebOpyt(lvl); energ = maxEnerg; moeDom = 'mansion'; domUp = 3; for (var i = 0; i < dostizheniya.length; i++) dostizheniya[i].done = true; activeSkin = '🐲'; skinKingKupil = true; skinDragonKupil = true; toast('💎 +10 млн, Ур.50, особняк', 'gold'); sohranit(); render(); }
-function admBystroStart() { dengi = 1000; lvl = 1; opyt = 0; maxEnerg = 22; energ = 22; inv = []; loty = []; dolg = 0; moeDom = 'street'; domUp = 0; vtoroyDom = null; vtoroyDomId = null; vtoroyDomUp = 0; activeSkin = '👤'; apnutoDo5 = 0; vystavlenoLotov = 0; sEdeno = 0; sEdenoRestoran = 0; pospalRaz = 0; skinKingKupil = false; skinDragonKupil = false; bralKredit = false; platilDolg = false; toast('🔄 Откат', 'ok'); sohranit(); render(); }k'); sohranit(); render(); }
+function admBystroStart() { dengi = 1000; lvl = 1; opyt = 0; maxEnerg = 22; energ = 22; inv = []; loty = []; dolg = 0; moeDom = 'street'; domUp = 0; vtoroyDom = null; vtoroyDomId = null; vtoroyDomUp = 0; activeSkin = '👤'; apnutoDo5 = 0; vystavlenoLotov = 0; sEdeno = 0; sEdenoRestoran = 0; pospalRaz = 0; skinKingKupil = false; skinDragonKupil = false; bralKredit = false; platilDolg = false; toast('🔄 Откат', 'ok'); sohranit(); render(); }
