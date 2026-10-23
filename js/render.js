@@ -451,4 +451,4 @@ function renderSettings(c, v) {
   hst += '<div class="card red"><div class="card-name" style="margin-bottom:8px">🗑️ Сброс</div>';
   hst += '<button class="btn red full" onclick="sbrosProgressa()">Сбросить прогресс</button></div>';
   c.innerHTML = hst;
-      }
+    }
