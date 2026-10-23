@@ -55,6 +55,16 @@ var rulPoslRezultat = '';
 var upgradeVybranUid = null;
 var upgradeResult = '';
 
+var CVET_MAP = {
+  blue: { accent: '#66ccff', text: '#000' },
+  green: { accent: '#66ff66', text: '#000' },
+  purple: { accent: '#c966ff', text: '#fff' },
+  red: { accent: '#ff6666', text: '#fff' },
+  orange: { accent: '#ff9933', text: '#000' },
+  yellow: { accent: '#ffdd33', text: '#000' },
+  pink: { accent: '#ff66aa', text: '#fff' }
+};
+
 function tekuscheeIgrovoeMs() {
   var vIgre = (Date.now() - vremyaZahoda) * MNOZHITEL_V_IGRE;
   return igrovoySdvig + vIgre;
@@ -79,18 +89,30 @@ function primenitTemu() {
   if (tema == 'light') document.body.classList.add('light');
   else document.body.classList.remove('light');
   
-  var cvetMap = {
-    blue: { accent: '#66ccff', text: '#000' },
-    green: { accent: '#66ff66', text: '#000' },
-    purple: { accent: '#c966ff', text: '#fff' },
-    red: { accent: '#ff6666', text: '#fff' },
-    orange: { accent: '#ff9933', text: '#000' },
-    yellow: { accent: '#ffdd33', text: '#000' },
-    pink: { accent: '#ff66aa', text: '#fff' }
-  };
-  var cv = cvetMap[cvet] || cvetMap.blue;
+  var cv = CVET_MAP[cvet] || CVET_MAP.blue;
   document.documentElement.style.setProperty('--accent', cv.accent);
   document.documentElement.style.setProperty('--accent-text', cv.text);
+  
+  setTimeout(function() {
+    var accentEls = document.querySelectorAll('.clock, .stat b, .tab.active, .cat.active, .admin-title, .modal h2');
+    for (var i = 0; i < accentEls.length; i++) accentEls[i].style.color = cv.accent;
+    
+    var tabActive = document.querySelectorAll('.tab.active');
+    for (var j = 0; j < tabActive.length; j++) {
+      tabActive[j].style.background = cv.accent;
+      tabActive[j].style.color = cv.text;
+    }
+    var catActive = document.querySelectorAll('.cat.active');
+    for (var k = 0; k < catActive.length; k++) {
+      catActive[k].style.background = cv.accent;
+      catActive[k].style.color = cv.text;
+    }
+    var btns = document.querySelectorAll('.btn:not(.green):not(.red):not(.gold):not(.purple)');
+    for (var b = 0; b < btns.length; b++) {
+      btns[b].style.background = cv.accent;
+      btns[b].style.color = cv.text;
+    }
+  }, 50);
 }
 
 function sobratSaveObekt() {
@@ -169,7 +191,7 @@ function primenitSave(d) {
   if (typeof d.kupilVsego === 'number' && d.kupilVsego >= 0) kupilVsego = d.kupilVsego;
   if (typeof d.prodalVsego === 'number' && d.prodalVsego >= 0) prodalVsego = d.prodalVsego;
   if (d.tema === 'dark' || d.tema === 'light') tema = d.tema;
-  if (typeof d.cvet === 'string') cvet = d.cvet;
+  if (typeof d.cvet === 'string' && CVET_MAP[d.cvet]) cvet = d.cvet;
   if (typeof d.moeDom === 'string' && naytiDom(d.moeDom)) moeDom = d.moeDom;
   if (d.vtoroyDom === 'mesto' || d.vtoroyDom === null) vtoroyDom = d.vtoroyDom;
   if (typeof d.pokazyvatModalki === 'boolean') pokazyvatModalki = d.pokazyvatModalki;
@@ -355,4 +377,4 @@ function dohodDomaSUp(dom, up) {
 
 function sonDomaSUp(dom, up) {
   return Math.floor(dom.son * (1 + up * 0.5));
-}
+             }
