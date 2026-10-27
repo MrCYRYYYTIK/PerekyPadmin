@@ -1,4 +1,4 @@
-var SAVE_VERSION = 7;
+var SAVE_VERSION = 9;
 var SAVE_KEY_LOCAL = 'perekup';
 var SAVE_KEY_VK = 'perekup_save_v2';
 
@@ -26,6 +26,7 @@ var domUp = 0;
 var vtoroyDomId = null;
 var vtoroyDomUp = 0;
 var poslDohodDen = 0;
+var prestizh = 0;
 
 var poslBonus = 0;
 var seriyaDney = 0;
@@ -35,7 +36,7 @@ var poslEnergMin = -9999;
 var pokazyvatModalki = true;
 
 var posledVidenVersiya = '';
-var TEKUSHCHAYA_VERSIYA = '1.2';
+var TEKUSHCHAYA_VERSIYA = '1.3';
 
 var kupilVsego = 0;
 var prodalVsego = 0;
@@ -96,7 +97,6 @@ function primenitTemu() {
   setTimeout(function() {
     var accentEls = document.querySelectorAll('.clock, .stat b, .tab.active, .cat.active, .admin-title, .modal h2');
     for (var i = 0; i < accentEls.length; i++) accentEls[i].style.color = cv.accent;
-    
     var tabActive = document.querySelectorAll('.tab.active');
     for (var j = 0; j < tabActive.length; j++) {
       tabActive[j].style.background = cv.accent;
@@ -128,7 +128,7 @@ function sobratSaveObekt() {
     tema: tema, cvet: cvet, moeDom: moeDom,
     vtoroyDom: vtoroyDom, pokazyvatModalki: pokazyvatModalki,
     domUp: domUp, vtoroyDomId: vtoroyDomId, vtoroyDomUp: vtoroyDomUp,
-    poslDohodDen: poslDohodDen,
+    poslDohodDen: poslDohodDen, prestizh: prestizh,
     posledVidenVersiya: posledVidenVersiya,
     apnutoDo5: apnutoDo5, vystavlenoLotov: vystavlenoLotov,
     sEdeno: sEdeno, sEdenoRestoran: sEdenoRestoran,
@@ -200,6 +200,7 @@ function primenitSave(d) {
   if (typeof d.vtoroyDomId === 'string' && naytiDom(d.vtoroyDomId)) vtoroyDomId = d.vtoroyDomId;
   if (typeof d.vtoroyDomUp === 'number') vtoroyDomUp = d.vtoroyDomUp;
   if (typeof d.poslDohodDen === 'number') poslDohodDen = d.poslDohodDen;
+  if (typeof d.prestizh === 'number') prestizh = d.prestizh;
   if (typeof d.apnutoDo5 === 'number') apnutoDo5 = d.apnutoDo5;
   if (typeof d.vystavlenoLotov === 'number') vystavlenoLotov = d.vystavlenoLotov;
   if (typeof d.sEdeno === 'number') sEdeno = d.sEdeno;
@@ -277,7 +278,7 @@ function dobavitOpyt(skolko) {
   while (opyt >= trebOpyt(lvl + 1) && lvl < 100) {
     lvl++;
     povysheniya++;
-    maxEnerg = 20 + lvl * 2;
+    maxEnerg = 20 + lvl * 2 + (prestizh * 10);
     if (povysheniya > 50) break;
   }
   if (povysheniya > 0) {
@@ -377,4 +378,4 @@ function dohodDomaSUp(dom, up) {
 
 function sonDomaSUp(dom, up) {
   return Math.floor(dom.son * (1 + up * 0.5));
-             }
+    }
