@@ -194,3 +194,9 @@ body.light .cvet-krug.active { border-color: black; box-shadow: 0 0 10px rgba(0,
 .cvet-krug-orange { background: #ff9933; }
 .cvet-krug-yellow { background: #ffdd33; }
 .cvet-krug-pink { background: #ff66aa; }
+#prestizh {
+  font-size: 12px;
+  color: gold;
+  margin-top: 4px;
+  text-shadow: 0 0 5px gold;
+}
