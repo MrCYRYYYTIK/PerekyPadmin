@@ -42,6 +42,21 @@ function render() {
     document.getElementById('energy').textContent = energ + '/' + maxEnerg;
   }
   
+  // Отображение престижа в шапке
+  var prestizhEl = document.getElementById('prestizh');
+  if (!prestizhEl) {
+    var header = document.querySelector('.header');
+    if (header) {
+      var pDiv = document.createElement('div');
+      pDiv.id = 'prestizh';
+      pDiv.style.cssText = 'font-size:12px;color:gold;margin-top:4px;';
+      header.appendChild(pDiv);
+    }
+  }
+  if (prestizhEl) {
+    prestizhEl.textContent = prestizh > 0 ? '⭐ Престиж ' + prestizh : '';
+  }
+  
   obnovitLvlBar();
   var c = document.getElementById('content');
   var v = vremyaIgry();
@@ -78,11 +93,14 @@ function renderMarket(c, v) {
   html += '</div>';
 
   var sorted = tovari.slice().sort(function(a, b) { return a.lvl - b.lvl; });
+  var skidka = 1 - (prestizh * 0.05);
+  if (skidka < 0.5) skidka = 0.5;
+  
   for (var i = 0; i < sorted.length; i++) {
     var it = sorted[i];
     if (rynokCateg !== 'all' && it.category !== rynokCateg) continue;
     var zakr = it.lvl > lvl;
-    var cena = randomCena(it.cena);
+    var cena = Math.floor(randomCena(it.cena) * skidka);
     var knopka = zakr || dengi < cena ? '<button class="btn" disabled>Купить</button>' : '<button class="btn" onclick="kupit(\'' + it.id + '\')">Купить</button>';
     html += '<div class="card"><div class="card-row">';
     html += '<div class="card-info"><div class="card-name">' + it.name + (zakr ? ' 🔒' : '') + '</div>';
@@ -440,6 +458,15 @@ function renderSettings(c, v) {
   hst += '<div class="cvet-krug cvet-krug-pink' + (cvet == 'pink' ? ' active' : '') + '" onclick="setCvet(\'pink\')"></div>';
   hst += '</div></div>';
 
+  hst += '<div class="card gold">';
+  hst += '<div class="card-name">⭐ Престиж: ' + prestizh + '</div>';
+  hst += '<div class="card-meta">+5% к продаже, +10 к энергии, -5% к покупке за уровень</div>';
+  if (prestizh > 0) {
+    hst += '<div class="card-meta">Текущий бонус: +' + (prestizh * 5) + '% продажа, +' + (prestizh * 10) + ' ⚡, -' + (prestizh * 5) + '% покупка</div>';
+  }
+  hst += '<button class="btn gold full" onclick="sdelatPrestizh()">⭐ Сделать Престиж</button>';
+  hst += '</div>';
+
   hst += '<div class="card purple"><div class="card-name">📅 Игровое время</div>';
   hst += '<div class="card-meta">День ' + v.den + ' · ' + formatTime(v.chas, v.min) + '</div>';
   hst += '<div class="card-meta">В игре: 1 сек = 1 мин · Вне игры: 1 сек = 1 сек</div></div>';
@@ -451,4 +478,4 @@ function renderSettings(c, v) {
   hst += '<div class="card red"><div class="card-name" style="margin-bottom:8px">🗑️ Сброс</div>';
   hst += '<button class="btn red full" onclick="sbrosProgressa()">Сбросить прогресс</button></div>';
   c.innerHTML = hst;
-    }
+      }
