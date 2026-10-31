@@ -135,7 +135,7 @@ function podkluchitKlik() {
 }
 
 zagruzit();
-maxEnerg = 20 + lvl * 2;
+maxEnerg = 20 + lvl * 2 + (prestizh * 10);
 primenitTemu();
 render();
 
