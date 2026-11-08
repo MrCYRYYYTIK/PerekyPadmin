@@ -1,4 +1,4 @@
-var SAVE_VERSION = 9;
+var SAVE_VERSION = 10;
 var SAVE_KEY_LOCAL = 'perekup';
 var SAVE_KEY_VK = 'perekup_save_v2';
 
@@ -55,6 +55,24 @@ var casinoTab = 'keysy';
 var rulPoslRezultat = '';
 var upgradeVybranUid = null;
 var upgradeResult = '';
+
+// БАНК
+var bankBalans = 0;
+var bankNomer = '4686';
+var bankHistory = [];
+
+// СОБЫТИЯ
+var sobytieCateg = null;
+var sobytieMod = 1;
+var sobytieKonec = 0;
+
+// ЗАДАНИЯ
+var ezhednevnyeZadaniya = [];
+var poslZadaniyaDen = 0;
+
+// ПОМОЩНИК
+var pomoshchnikKupLen = false;
+var pomoshchnikPosl = 0;
 
 var CVET_MAP = {
   blue: { accent: '#66ccff', text: '#000' },
@@ -135,6 +153,10 @@ function sobratSaveObekt() {
     pospalRaz: pospalRaz, skinKingKupil: skinKingKupil,
     skinDragonKupil: skinDragonKupil,
     bralKredit: bralKredit, platilDolg: platilDolg,
+    bankBalans: bankBalans, bankHistory: bankHistory,
+    sobytieCateg: sobytieCateg, sobytieMod: sobytieMod, sobytieKonec: sobytieKonec,
+    ezhednevnyeZadaniya: ezhednevnyeZadaniya, poslZadaniyaDen: poslZadaniyaDen,
+    pomoshchnikKupLen: pomoshchnikKupLen, pomoshchnikPosl: pomoshchnikPosl,
     igrovoySdvig: igrovoySdvig,
     posledneeSohr: posledneeSohr
   };
@@ -210,6 +232,15 @@ function primenitSave(d) {
   if (typeof d.skinDragonKupil === 'boolean') skinDragonKupil = d.skinDragonKupil;
   if (typeof d.bralKredit === 'boolean') bralKredit = d.bralKredit;
   if (typeof d.platilDolg === 'boolean') platilDolg = d.platilDolg;
+  if (typeof d.bankBalans === 'number') bankBalans = d.bankBalans;
+  if (Array.isArray(d.bankHistory)) bankHistory = d.bankHistory;
+  if (typeof d.sobytieCateg === 'string' || d.sobytieCateg === null) sobytieCateg = d.sobytieCateg;
+  if (typeof d.sobytieMod === 'number') sobytieMod = d.sobytieMod;
+  if (typeof d.sobytieKonec === 'number') sobytieKonec = d.sobytieKonec;
+  if (Array.isArray(d.ezhednevnyeZadaniya)) ezhednevnyeZadaniya = d.ezhednevnyeZadaniya;
+  if (typeof d.poslZadaniyaDen === 'number') poslZadaniyaDen = d.poslZadaniyaDen;
+  if (typeof d.pomoshchnikKupLen === 'boolean') pomoshchnikKupLen = d.pomoshchnikKupLen;
+  if (typeof d.pomoshchnikPosl === 'number') pomoshchnikPosl = d.pomoshchnikPosl;
   var oldSdvig = (typeof d.igrovoySdvig === 'number') ? d.igrovoySdvig : 0;
   var oldSohr = (typeof d.posledneeSohr === 'number') ? d.posledneeSohr : Date.now();
   var proshloOffline = Date.now() - oldSohr;
@@ -264,6 +295,10 @@ function sbrosProgressa() {
   bralKredit = false; platilDolg = false;
   moeDom = 'street'; vtoroyDom = null;
   domUp = 0; vtoroyDomId = null; vtoroyDomUp = 0; poslDohodDen = 0;
+  bankBalans = 0; bankHistory = [];
+  sobytieCateg = null; sobytieMod = 1; sobytieKonec = 0;
+  ezhednevnyeZadaniya = []; poslZadaniyaDen = 0;
+  pomoshchnikKupLen = false; pomoshchnikPosl = 0;
   posledVidenVersiya = '';
   for (var i = 0; i < dostizheniya.length; i++) dostizheniya[i].done = false;
   toast('🗑️ Прогресс сброшен', 'ok');
@@ -378,4 +413,4 @@ function dohodDomaSUp(dom, up) {
 
 function sonDomaSUp(dom, up) {
   return Math.floor(dom.son * (1 + up * 0.5));
-    }
+}
