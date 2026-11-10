@@ -60,7 +60,8 @@ function zapustitTaimery() {
   timerChasy = setInterval(obnovitChasy, 1000);
   timerSave = setInterval(function() { sohranit(); }, 5000);
   timerRender = setInterval(function() {
-    if (tab == 'inventory' || tab == 'market' || tab == 'dom' || tab == 'food') render();
+    // Добавлен bank в автообновление
+    if (tab == 'inventory' || tab == 'market' || tab == 'dom' || tab == 'food' || tab == 'bank') render();
   }, 1500);
   timerDostizh = setInterval(function() { proveritDostizheniya(); }, 5000);
   timerEnerg = setInterval(function() { proveritEnergiyu(); }, 5000);
