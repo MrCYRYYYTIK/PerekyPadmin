@@ -386,7 +386,7 @@ function renderBank(c) {
 
   // --- Картинка банковской карты из папки photos ---
   hb += '<div style="position: relative; width: 100%; max-width: 340px; margin: 0 auto 15px; text-align: center;">';
-  hb += '<img src="photos/card.jpg" style="width: 100%; border-radius: 12px; box-shadow: 0 6px 15px rgba(0,0,0,0.4);" alt="Пенькоф Банк">';
+  hb += '<img src="photos/card.png" style="width: 100%; border-radius: 12px; box-shadow: 0 6px 15px rgba(0,0,0,0.4);" alt="Пенькоф Банк">';
   hb += '</div>';
 
   // --- Баланс ---
