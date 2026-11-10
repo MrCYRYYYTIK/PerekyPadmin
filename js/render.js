@@ -382,7 +382,45 @@ function renderDom(c, v) {
 
 function renderBank(c) {
   var maxK = 5000 + lvl * 3000;
-  var hb = '<div class="card"><div class="card-name" style="margin-bottom:8px">🏦 Банк</div>';
+  var hb = '';
+
+  // --- Картинка банковской карты из папки photos ---
+  hb += '<div style="position: relative; width: 100%; max-width: 340px; margin: 0 auto 15px; text-align: center;">';
+  hb += '<img src="photos/card.jpg" style="width: 100%; border-radius: 12px; box-shadow: 0 6px 15px rgba(0,0,0,0.4);" alt="Пенькоф Банк">';
+  hb += '</div>';
+
+  // --- Баланс ---
+  hb += '<div class="card" style="text-align: center; background: #1a1a1a; border: 1px solid #333;">';
+  hb += '<div class="card-meta" style="font-size: 12px; color: #aaa; text-transform: uppercase; letter-spacing: 1px;">Баланс на счету</div>';
+  hb += '<div style="font-size: 28px; font-weight: bold; color: #66ff66; margin-top: 4px;">' + formatChislo(bankBalans) + ' ₽</div>';
+  hb += '</div>';
+
+  // --- Управление счетом ---
+  hb += '<div class="card"><div class="card-name" style="margin-bottom:8px">💸 Управление счетом</div>';
+  hb += '<input type="number" id="bankSumma" placeholder="Сумма" style="width:100%;padding:10px;border-radius:6px;border:2px solid #555;background:#222;color:white;margin-bottom:8px;text-align:center;">';
+  hb += '<div class="admin-btns">';
+  hb += '<button class="btn small green" onclick="polozhitVBank()">➕ Положить</button>';
+  hb += '<button class="btn small red" onclick="snyatSBanka()">➖ Снять</button>';
+  hb += '</div>';
+  hb += '</div>';
+
+  // --- История операций ---
+  if (bankHistory.length > 0) {
+    hb += '<div class="card purple"><div class="card-name" style="margin-bottom:8px">📜 История операций</div>';
+    for (var i = 0; i < bankHistory.length; i++) {
+      var op = bankHistory[i];
+      var icon = op.type === 'in' ? '🟢' : (op.type === 'out' ? '🔴' : '💳');
+      var text = op.type === 'in' ? 'Пополнение' : (op.type === 'out' ? 'Снятие' : 'На карту');
+      hb += '<div style="display:flex;justify-content:space-between;font-size:12px;padding:4px 0;border-bottom:1px solid #444;">';
+      hb += '<span>' + icon + ' ' + text + '</span>';
+      hb += '<span style="color:' + (op.type === 'in' ? '#66ff66' : '#ff6666') + '">' + (op.type === 'in' ? '+' : '-') + formatChislo(op.summa) + '₽</span>';
+      hb += '</div>';
+    }
+    hb += '</div>';
+  }
+
+  // --- Кредиты ---
+  hb += '<div class="card"><div class="card-name" style="margin-bottom:8px">🏦 Кредиты</div>';
   hb += '<div class="card-meta">Возврат: +30%</div>';
   if (dolg > 0) {
     hb += '<div class="card-meta" style="color:#ff6666">💸 Долг: ' + formatChislo(dolg) + '₽</div>';
@@ -391,6 +429,7 @@ function renderBank(c) {
     hb += '<div class="card-meta">Макс: ' + formatChislo(maxK) + '₽</div>';
   }
   hb += '</div>';
+
   if (dolg == 0) {
     var summy = [1000, 5000, 20000, 50000, maxK];
     for (var s2 = 0; s2 < summy.length; s2++) {
@@ -478,4 +517,4 @@ function renderSettings(c, v) {
   hst += '<div class="card red"><div class="card-name" style="margin-bottom:8px">🗑️ Сброс</div>';
   hst += '<button class="btn red full" onclick="sbrosProgressa()">Сбросить прогресс</button></div>';
   c.innerHTML = hst;
-      }
+}
