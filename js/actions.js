@@ -818,3 +818,40 @@ function admOchistitLoty() { if (loty.length === 0) return toast('Нет лот�
 function admObolg() { dolg = 0; platilDolg = true; toast('✅ Долг обнулён', 'gold'); sohranit(); render(); }
 function admBystroBogat() { dengi += 10000000; lvl = 50; maxEnerg = 20 + lvl * 2 + (prestizh * 10); opyt = trebOpyt(lvl); energ = maxEnerg; moeDom = 'mansion'; domUp = 3; for (var i = 0; i < dostizheniya.length; i++) dostizheniya[i].done = true; activeSkin = '🐲'; skinKingKupil = true; skinDragonKupil = true; toast('💎 +10 млн, Ур.50, особняк', 'gold'); sohranit(); render(); }
 function admBystroStart() { dengi = 1000; lvl = 1; opyt = 0; maxEnerg = 22; energ = 22; inv = []; loty = []; dolg = 0; moeDom = 'street'; domUp = 0; vtoroyDom = null; vtoroyDomId = null; vtoroyDomUp = 0; activeSkin = '👤'; apnutoDo5 = 0; vystavlenoLotov = 0; sEdeno = 0; sEdenoRestoran = 0; pospalRaz = 0; skinKingKupil = false; skinDragonKupil = false; bralKredit = false; platilDolg = false; toast('🔄 Откат', 'ok'); sohranit(); render(); }
+
+// === БАНК ===
+function polozhitVBank() {
+  var summa = parseInt(document.getElementById('bankSumma').value);
+  if (isNaN(summa) || summa <= 0) return toast('❌ Введи сумму', 'err');
+  if (dengi < summa) return toast('💸 Мало наличных', 'err');
+  dengi -= summa;
+  bankBalans += summa;
+  bankHistory.unshift({ type: 'in', summa: summa, time: Date.now() });
+  if (bankHistory.length > 10) bankHistory.pop();
+  toast('🏦 Положено ' + formatChislo(summa) + '₽', 'ok');
+  sohranit(); render();
+}
+
+function snyatSBanka() {
+  var summa = parseInt(document.getElementById('bankSumma').value);
+  if (isNaN(summa) || summa <= 0) return toast('❌ Введи сумму', 'err');
+  if (bankBalans < summa) return toast('💸 Мало на счету', 'err');
+  bankBalans -= summa;
+  dengi += summa;
+  bankHistory.unshift({ type: 'out', summa: summa, time: Date.now() });
+  if (bankHistory.length > 10) bankHistory.pop();
+  toast('🏦 Снято ' + formatChislo(summa) + '₽', 'ok');
+  sohranit(); render();
+}
+
+function perevodNaKartu() {
+  var summa = parseInt(document.getElementById('bankSumma').value);
+  if (isNaN(summa) || summa <= 0) return toast('❌ Введи сумму', 'err');
+  if (dengi < summa) return toast('💸 Мало наличных', 'err');
+  dengi -= summa;
+  bankBalans += summa;
+  bankHistory.unshift({ type: 'card', summa: summa, time: Date.now() });
+  if (bankHistory.length > 10) bankHistory.pop();
+  toast('💳 Переведено на карту ' + bankNomer, 'gold');
+  sohranit(); render();
+    }
